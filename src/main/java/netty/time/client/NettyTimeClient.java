@@ -1,10 +1,11 @@
 package netty.time.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 /**
@@ -27,7 +28,8 @@ public class NettyTimeClient
             strap.group(connectGroup).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true)
                 .handler(new TimeClientHandler());
 
-            strap.connect(host, port).sync();
+            ChannelFuture future = strap.connect(host, port).sync();
+            future.channel().closeFuture().sync();
         }
         finally
         {
@@ -35,19 +37,20 @@ public class NettyTimeClient
         }
     }
 
-    private class TimeClientChannel extends ChannelInitializer
+    private class TimeClientChannel extends ChannelInitializer<SocketChannel>
     {
+
         @Override
-        protected void initChannel(Channel ch)
+        protected void initChannel(SocketChannel ch)
             throws Exception
         {
-            ch.pipeline().addLast(new TimeClientHandler());
+            ch.pipeline().addLast(new TimeClientHandler1());
         }
     }
 
     public static void main(String[] args)
         throws InterruptedException
     {
-        new NettyTimeClient().connect(8081, "127.0.0.1");
+        new NettyTimeClient().connect(8082, "127.0.0.1");
     }
 }

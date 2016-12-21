@@ -33,6 +33,7 @@ public class NettyTimeServer
                 .childHandler(new ChildChannelHandler());
 
             ChannelFuture fu = bootstrap.bind(new InetSocketAddress(port)).sync();
+            fu.channel().closeFuture().sync();
         }
         catch (InterruptedException e)
         {
@@ -51,12 +52,13 @@ public class NettyTimeServer
         protected void initChannel(SocketChannel ch)
             throws Exception
         {
-            ch.pipeline().addLast(new TimeServerHandler());
+            ch.pipeline().addLast(new TimeServerHandler1());
         }
     }
 
     public static void main(String[] args)
     {
-        new NettyTimeServer().bind(8081);
+        System.out.println(123);
+        new NettyTimeServer().bind(8082);
     }
 }
