@@ -10,14 +10,14 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * 通过特殊字符 解决粘包、拆包问题
  *
  * @author liming
  * @version [版本号, 十二月 21, 2016]
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
-public class TimeServerHandler1 extends ChannelHandlerAdapter
+public class TimeServerHandler2 extends ChannelHandlerAdapter
 {
     private int counter;
 
@@ -32,7 +32,7 @@ public class TimeServerHandler1 extends ChannelHandlerAdapter
         System.out.println("recieve times:" + (++counter) + "{}"+body);
         String currentTime = ((body.equalsIgnoreCase("abcd") ?
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) :
-            "BAD ORDER")) + System.lineSeparator();
+            "BAD ORDER")) + "_$";
         ByteBuf rsp = Unpooled.copiedBuffer(currentTime.getBytes());
         context.writeAndFlush(rsp);
     }

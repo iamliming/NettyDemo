@@ -1,23 +1,19 @@
 package netty.time.server;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * <一句话功能简述> <功能详细描述>
+ * 定长解决拆包、粘包问题
  *
  * @author liming
  * @version [版本号, 十二月 21, 2016]
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
-public class TimeServerHandler1 extends ChannelHandlerAdapter
+public class TimeServerHandler3 extends ChannelHandlerAdapter
 {
     private int counter;
 
@@ -30,11 +26,11 @@ public class TimeServerHandler1 extends ChannelHandlerAdapter
         String body = new String(bytes, "UTF-8").substring(0, bytes.length - System.lineSeparator().length());*/
         String body = (String)msg;
         System.out.println("recieve times:" + (++counter) + "{}"+body);
-        String currentTime = ((body.equalsIgnoreCase("abcd") ?
+        /*String currentTime = ((body.equalsIgnoreCase("abcd") ?
             LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) :
             "BAD ORDER")) + System.lineSeparator();
         ByteBuf rsp = Unpooled.copiedBuffer(currentTime.getBytes());
-        context.writeAndFlush(rsp);
+        context.writeAndFlush(rsp);*/
     }
 
     @Override

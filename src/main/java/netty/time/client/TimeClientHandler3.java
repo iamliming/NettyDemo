@@ -8,19 +8,19 @@ import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
 /**
- * 分隔符解决粘包问题
+ * 定长解决粘包问题
  *
  * @author liming
  * @version [版本号, 十二月 21, 2016]
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
-public class TimeClientHandler1 extends ChannelHandlerAdapter
+public class TimeClientHandler3 extends ChannelHandlerAdapter
 {
     private int counter;
     private byte[] req;
 
-    public TimeClientHandler1()
+    public TimeClientHandler3()
         throws UnsupportedEncodingException
     {
         req = ("abcd"+ System.lineSeparator()).getBytes("UTF-8");
