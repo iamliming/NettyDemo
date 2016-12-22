@@ -1,8 +1,5 @@
 package messagepack.client;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import messagepack.Person;
@@ -28,14 +25,14 @@ public class EchoClientHandler extends ChannelHandlerAdapter
     public void channelActive(ChannelHandlerContext ctx)
         throws Exception
     {
-        List<Person> persons = new ArrayList<Person>();
         for(int i = 0 ; i < num ; i++)
         {
             Person person = new Person((int)(Math.random()*100),"abc",(float)(Math.random()*100000));
-            persons.add(person);
+            ctx.write(person);
+            ctx.flush();
+            System.out.println(i);
         }
-        Person person = new Person((int)(Math.random()*100),"abc",(float)(Math.random()*100000));
-        ctx.writeAndFlush(person);
+
     }
 
     @Override
@@ -43,7 +40,13 @@ public class EchoClientHandler extends ChannelHandlerAdapter
         throws Exception
     {
         System.out.println("Client read msg:"+msg);
-        ctx.writeAndFlush(msg);
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx)
+        throws Exception
+    {
+        ctx.flush();
     }
 
     @Override

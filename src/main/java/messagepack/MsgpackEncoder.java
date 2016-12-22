@@ -14,14 +14,15 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
-public class MsgpackEncoder extends MessageToByteEncoder<Object>
+public class MsgpackEncoder extends MessageToByteEncoder<Person>
 {
     @Override
-    protected void encode(ChannelHandlerContext channelHandlerContext, Object o, ByteBuf byteBuf)
+    protected void encode(ChannelHandlerContext channelHandlerContext, Person o, ByteBuf byteBuf)
         throws Exception
     {
         MessagePack messagePack = new MessagePack();
         byte[] raw = messagePack.write(o);
         byteBuf.writeBytes(raw);
+        System.out.println("encoder");
     }
 }

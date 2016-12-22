@@ -31,11 +31,12 @@ public class MsgpackDecoder extends MessageToMessageDecoder<ByteBuf>
         //MessagePack msgPack = new MessagePack();
         //objects.add(msgPack.read(arr));
 
-        final byte[] array;
+
         final int length = byteBuf.readableBytes();
-        array = new byte[length];
-        byteBuf.getBytes(byteBuf.readableBytes(), array, 0, length);
+        final byte[] array = new byte[length];
+        byteBuf.getBytes(byteBuf.readerIndex(), array, 0, length);
         MessagePack msgPack = new MessagePack();
-        objects.add(msgPack.read(array));
+        objects.add(msgPack.read(array, Person.class));
+        System.out.println("decode");
     }
 }

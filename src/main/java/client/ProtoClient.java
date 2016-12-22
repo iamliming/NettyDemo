@@ -1,4 +1,4 @@
-package messagepack.client;
+package client;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -9,10 +9,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
-import messagepack.MsgpackDecoder;
-import messagepack.MsgpackEncoder;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import handler.ProtoClientHandler;
+import protobuf.SubscribeRespProto;
 
 /**
  * <一句话功能简述> <功能详细描述>
@@ -22,7 +24,7 @@ import messagepack.MsgpackEncoder;
  * @see [相关类/方法]
  * @since [产品/模块版本]
  */
-public class EchoClient
+public class ProtoClient
 {
     public void connect(int port)
         throws InterruptedException
@@ -42,11 +44,11 @@ public class EchoClient
                         throws Exception
                     {
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
-                        pipeline.addLast(new MsgpackDecoder());
-                        pipeline.addLast(new LengthFieldPrepender(2));
-                        pipeline.addLast(new MsgpackEncoder());
-                        pipeline.addLast(new EchoClientHandler(1000));
+                        pipeline.addLast(new ProtobufVarint32FrameDecoder());
+                        pipeline.addLast(new ProtobufDecoder(SubscribeRespProto.SubscribeResp.getDefaultInstance()));
+                        pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
+                        pipeline.addLast(new ProtobufEncoder());
+                        pipeline.addLast(new ProtoClientHandler());
                     }
                 });
             ChannelFuture future = bootstrap.connect("127.0.0.1", port).sync();
@@ -61,6 +63,6 @@ public class EchoClient
     public static void main(String[] args)
         throws InterruptedException
     {
-        new EchoClient().connect(8888);
+        new ProtoClient().connect(8888);
     }
 }

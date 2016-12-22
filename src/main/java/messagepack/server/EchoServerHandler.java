@@ -14,16 +14,20 @@ import messagepack.Person;
  */
 public class EchoServerHandler extends ChannelHandlerAdapter
 {
-
+    private int count;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg)
         throws Exception
     {
-        System.out.println(123);
-        Person person = (Person)msg;
-        System.out.println(person);
-        ctx.writeAndFlush("server read msg:" + person.getAge());
+        Person persons = (Person)msg;
+        System.out.println(persons.toString() + (++count));
+        ctx.writeAndFlush("server read msg:");
+        /*for(Person person : persons)
+        {
+            System.out.println(person);
+            ctx.writeAndFlush("server read msg:" + person.getAge());
+        }*/
     }
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause)

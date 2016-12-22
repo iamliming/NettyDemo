@@ -54,7 +54,7 @@ public class NettyTimeClient
 //            ch.pipeline().addLast(new TimeClientHandler2());
             ch.pipeline().addLast(new MsgpackDecoder());
             ch.pipeline().addLast(new MsgpackEncoder());
-            ch.pipeline().addLast(new EchoClientHandler(2));
+            ch.pipeline().addLast(new EchoClientHandler(10));
         }
     }
 

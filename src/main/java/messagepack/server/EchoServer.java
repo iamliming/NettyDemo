@@ -6,10 +6,13 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
 import messagepack.MsgpackDecoder;
 import messagepack.MsgpackEncoder;
 
@@ -32,22 +35,33 @@ public class EchoServer
         EventLoopGroup child = new NioEventLoopGroup();
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(parent, child)
-            .channel(NioServerSocketChannel.class)
-            .option(ChannelOption.SO_BACKLOG, 1024)
-            .childHandler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel ch)
-                    throws Exception
+        try
+        {
+            serverBootstrap.group(parent, child)
+                .channel(NioServerSocketChannel.class)
+                .option(ChannelOption.SO_BACKLOG, 1024)
+                .childHandler(new ChannelInitializer<SocketChannel>()
                 {
-                    ch.pipeline().addLast("msg decoder", new MsgpackDecoder());
-                    ch.pipeline().addLast("msg encoder", new MsgpackEncoder());
-                    ch.pipeline().addLast(new EchoServerHandler());
-                }
-            });
-        ChannelFuture future = serverBootstrap.bind(new InetSocketAddress(port)).sync();
-        future.channel().closeFuture().sync();
-
+                    @Override
+                    protected void initChannel(SocketChannel ch)
+                        throws Exception
+                    {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
+                        pipeline.addLast(new MsgpackDecoder());
+                        pipeline.addLast(new LengthFieldPrepender(2));
+                        pipeline.addLast(new MsgpackEncoder());
+                        pipeline.addLast(new EchoServerHandler());
+                    }
+                });
+            ChannelFuture future = serverBootstrap.bind(new InetSocketAddress(port)).sync();
+            future.channel().closeFuture().sync();
+        }
+        finally
+        {
+            parent.shutdownGracefully();
+            child.shutdownGracefully();
+        }
     }
 
     public static void main(String[] args)

@@ -1,5 +1,7 @@
 package messagepack;
 
+import java.io.Serializable;
+
 import org.msgpack.annotation.Message;
 
 /**
@@ -11,8 +13,13 @@ import org.msgpack.annotation.Message;
  * @since [产品/模块版本]
  */
 @Message
-public class Person
+public class Person implements Serializable
 {
+
+    /**
+     * 默认的序列号
+     */
+    private static final long serialVersionUID = 1L;
 
     private int age;
 
