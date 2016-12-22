@@ -9,8 +9,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.FixedLengthFrameDecoder;
-import io.netty.handler.codec.string.StringDecoder;
+import messagepack.MsgpackDecoder;
+import messagepack.MsgpackEncoder;
+import messagepack.server.EchoServerHandler;
 
 /**
  * <一句话功能简述> <功能详细描述>
@@ -57,9 +58,12 @@ public class NettyTimeServer
 //            ch.pipeline().addLast(new LineBasedFrameDecoder(1024));
 //            ByteBuf delimit = Unpooled.copiedBuffer("_$".getBytes());
 //            ch.pipeline().addLast(new DelimiterBasedFrameDecoder(1024, delimit));
-            ch.pipeline().addLast(new FixedLengthFrameDecoder(20));
-            ch.pipeline().addLast(new StringDecoder());
-            ch.pipeline().addLast(new TimeServerHandler3());
+//            ch.pipeline().addLast(new FixedLengthFrameDecoder(20));
+//            ch.pipeline().addLast(new StringDecoder());
+//            ch.pipeline().addLast(new TimeServerHandler3());
+            ch.pipeline().addLast(new MsgpackDecoder());
+            ch.pipeline().addLast(new MsgpackEncoder());
+            ch.pipeline().addLast(new EchoServerHandler());
         }
     }
 
