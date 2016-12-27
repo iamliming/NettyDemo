@@ -1,0 +1,18 @@
+<binding name="binding" package="domain">
+  <mapping abstract="true" type-name="order" class="domain.Order">
+    <value style="attribute" name="number" field="number"/>
+    <structure field="customer" usage="optional" name="customer">
+      <value style="element" name="name" field="name" usage="optional"/>
+      <value style="attribute" name="customerNumber" field="customerNumber"/>
+    </structure>
+    <structure field="address" usage="optional" name="address">
+      <value style="element" name="street" field="street" usage="optional"/>
+      <value style="element" name="city" field="city" usage="optional"/>
+    </structure>
+    <value style="element" name="shipping" field="shipping" usage="optional"/>
+    <value style="attribute" name="total" field="total" usage="optional"/>
+  </mapping>
+  <mapping class="domain.Order" name="order">
+    <structure map-as="order"/>
+  </mapping>
+</binding>

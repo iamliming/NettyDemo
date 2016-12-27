@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="neetydemo" default="all">
+<project name="nettydemo" default="all">
   
   
-  <property file="neetydemo.properties"/>
+  <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
   <!-- 
   <property name="skip.tests" value="true"/>
@@ -29,23 +29,21 @@
     <exclude name="**/*.hprof/**"/>
     <exclude name="**/_svn/**"/>
     <exclude name="**/.hg/**"/>
-    <exclude name="**/*.lib/**"/>
     <exclude name="**/*~/**"/>
     <exclude name="**/__pycache__/**"/>
-    <exclude name="**/.bundle/**"/>
     <exclude name="**/*.rbc/**"/>
     <exclude name="**/vssver.scc/**"/>
     <exclude name="**/vssver2.scc/**"/>
   </patternset>
   <patternset id="library.patterns">
     <include name="*.war"/>
-    <include name="*.ear"/>
+    <include name="*.swc"/>
     <include name="*.apk"/>
     <include name="*.zip"/>
-    <include name="*.swc"/>
-    <include name="*.ane"/>
     <include name="*.egg"/>
+    <include name="*.ane"/>
     <include name="*.jar"/>
+    <include name="*.ear"/>
   </patternset>
   <patternset id="compiler.resources">
     <exclude name="**/?*.java"/>
@@ -58,12 +56,43 @@
     <exclude name="**/?*.clj"/>
   </patternset>
   
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/access-bridge-64.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunmscapi.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
   
   <!-- Project Libraries -->
-  
-  <path id="library.maven:_bcel:bcel:5.1.classpath">
-    <pathelement location="${path.variable.maven_repository}/bcel/bcel/5.1/bcel-5.1.jar"/>
-  </path>
   
   <path id="library.maven:_com.google.protobuf:protobuf-java:2.5.0.classpath">
     <pathelement location="${path.variable.maven_repository}/com/google/protobuf/protobuf-java/2.5.0/protobuf-java-2.5.0.jar"/>
@@ -89,8 +118,8 @@
     <pathelement location="${path.variable.maven_repository}/io/netty/netty-all/5.0.0.Alpha1/netty-all-5.0.0.Alpha1.jar"/>
   </path>
   
-  <path id="library.maven:_joda-time:joda-time:2.2.classpath">
-    <pathelement location="${path.variable.maven_repository}/joda-time/joda-time/2.2/joda-time-2.2.jar"/>
+  <path id="library.maven:_joda-time:joda-time:2.9.5.classpath">
+    <pathelement location="${path.variable.maven_repository}/joda-time/joda-time/2.9.5/joda-time-2.9.5.jar"/>
   </path>
   
   <path id="library.maven:_junit:junit:4.10.classpath">
@@ -99,6 +128,18 @@
   
   <path id="library.maven:_log4j:log4j:1.2.17.classpath">
     <pathelement location="${path.variable.maven_repository}/log4j/log4j/1.2.17/log4j-1.2.17.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.ant:ant-launcher:1.8.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/ant/ant-launcher/1.8.4/ant-launcher-1.8.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.ant:ant:1.8.4.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/ant/ant/1.8.4/ant-1.8.4.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.apache.bcel:bcel:6.0.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/apache/bcel/bcel/6.0/bcel-6.0.jar"/>
   </path>
   
   <path id="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath">
@@ -149,32 +190,28 @@
     <pathelement location="${path.variable.maven_repository}/org/jibx/config/3rdparty/org/eclipse/org.eclipse.text/3.5.100.v20110505-0800/org.eclipse.text-3.5.100.v20110505-0800.jar"/>
   </path>
   
-  <path id="library.maven:_org.jibx:jibx-bind:1.2.6.classpath">
-    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-bind/1.2.6/jibx-bind-1.2.6.jar"/>
+  <path id="library.maven:_org.jibx:jibx-bind:1.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-bind/1.3.1/jibx-bind-1.3.1.jar"/>
   </path>
   
-  <path id="library.maven:_org.jibx:jibx-extras:1.2.6.classpath">
-    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-extras/1.2.6/jibx-extras-1.2.6.jar"/>
+  <path id="library.maven:_org.jibx:jibx-extras:1.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-extras/1.3.1/jibx-extras-1.3.1.jar"/>
   </path>
   
-  <path id="library.maven:_org.jibx:jibx-run:1.2.6.classpath">
-    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-run/1.2.6/jibx-run-1.2.6.jar"/>
+  <path id="library.maven:_org.jibx:jibx-run:1.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-run/1.3.1/jibx-run-1.3.1.jar"/>
   </path>
   
-  <path id="library.maven:_org.jibx:jibx-schema:1.2.6.classpath">
-    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-schema/1.2.6/jibx-schema-1.2.6.jar"/>
+  <path id="library.maven:_org.jibx:jibx-schema:1.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-schema/1.3.1/jibx-schema-1.3.1.jar"/>
   </path>
   
-  <path id="library.maven:_org.jibx:jibx-tools:1.2.6.classpath">
-    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-tools/1.2.6/jibx-tools-1.2.6.jar"/>
+  <path id="library.maven:_org.jibx:jibx-tools:1.3.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/jibx/jibx-tools/1.3.1/jibx-tools-1.3.1.jar"/>
   </path>
   
   <path id="library.maven:_org.msgpack:msgpack:0.6.7.classpath">
     <pathelement location="${path.variable.maven_repository}/org/msgpack/msgpack/0.6.7/msgpack-0.6.7.jar"/>
-  </path>
-  
-  <path id="library.maven:_regexp:regexp:1.2.classpath">
-    <pathelement location="${path.variable.maven_repository}/regexp/regexp/1.2/regexp-1.2.jar"/>
   </path>
   
   <path id="library.maven:_xml-apis:xml-apis:1.0.b2.classpath">
@@ -191,22 +228,26 @@
   <!-- Modules -->
   
   
-  <!-- Module neetydemo -->
+  <!-- Module NettyDemo -->
   
-  <dirname property="module.neetydemo.basedir" file="${ant.file}"/>
+  <dirname property="module.nettydemo.basedir" file="${ant.file}"/>
   
   
+  <property name="module.jdk.home.nettydemo" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.nettydemo" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.nettydemo" value="${project.jdk.classpath}"/>
   
-  <property name="compiler.args.neetydemo" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  <property name="compiler.args.nettydemo" value="-encoding UTF-8 -source 1.5 -target 1.5 ${compiler.args}"/>
   
-  <property name="neetydemo.output.dir" value="${module.neetydemo.basedir}/target/classes"/>
-  <property name="neetydemo.testoutput.dir" value="${module.neetydemo.basedir}/target/test-classes"/>
+  <property name="nettydemo.output.dir" value="${module.nettydemo.basedir}/target/classes"/>
+  <property name="nettydemo.testoutput.dir" value="${module.nettydemo.basedir}/target/test-classes"/>
   
-  <path id="neetydemo.module.bootclasspath">
+  <path id="nettydemo.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   
-  <path id="neetydemo.module.production.classpath">
+  <path id="nettydemo.module.production.classpath">
+    <path refid="${module.jdk.classpath.nettydemo}"/>
     <path refid="library.maven:_io.netty:netty-all:5.0.0.alpha1.classpath"/>
     <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
     <path refid="library.maven:_org.msgpack:msgpack:0.6.7.classpath"/>
@@ -215,20 +256,21 @@
     <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
     <path refid="library.maven:_org.javassist:javassist:3.16.1-ga.classpath"/>
     <path refid="library.maven:_com.google.protobuf:protobuf-java:2.5.0.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-run:1.2.6.classpath"/>
-    <path refid="library.maven:_joda-time:joda-time:2.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-run:1.3.1.classpath"/>
+    <path refid="library.maven:_joda-time:joda-time:2.9.5.classpath"/>
     <path refid="library.maven:_xpp3:xpp3:1.1.3.4.o.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-bind:1.2.6.classpath"/>
-    <path refid="library.maven:_bcel:bcel:5.1.classpath"/>
-    <path refid="library.maven:_regexp:regexp:1.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-bind:1.3.1.classpath"/>
+    <path refid="library.maven:_org.apache.bcel:bcel:6.0.classpath"/>
     <path refid="library.maven:_log4j:log4j:1.2.17.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.8.4.classpath"/>
     <path refid="library.maven:_com.thoughtworks.qdox:qdox:1.12.1.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-extras:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-extras:1.3.1.classpath"/>
     <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
     <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
     <path refid="library.maven:_org.jdom:jdom:1.1.3.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-schema:1.2.6.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-tools:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-schema:1.3.1.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-tools:1.3.1.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.contenttype:3.4.100.v20110423-0524.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.jobs:3.5.100.v20110404.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.resources:3.7.100.v20110510-0712.classpath"/>
@@ -240,8 +282,8 @@
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.text:3.5.100.v20110505-0800.classpath"/>
   </path>
   
-  <path id="neetydemo.runtime.production.module.classpath">
-    <pathelement location="${neetydemo.output.dir}"/>
+  <path id="nettydemo.runtime.production.module.classpath">
+    <pathelement location="${nettydemo.output.dir}"/>
     <path refid="library.maven:_io.netty:netty-all:5.0.0.alpha1.classpath"/>
     <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
     <path refid="library.maven:_org.msgpack:msgpack:0.6.7.classpath"/>
@@ -250,20 +292,21 @@
     <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
     <path refid="library.maven:_org.javassist:javassist:3.16.1-ga.classpath"/>
     <path refid="library.maven:_com.google.protobuf:protobuf-java:2.5.0.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-run:1.2.6.classpath"/>
-    <path refid="library.maven:_joda-time:joda-time:2.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-run:1.3.1.classpath"/>
+    <path refid="library.maven:_joda-time:joda-time:2.9.5.classpath"/>
     <path refid="library.maven:_xpp3:xpp3:1.1.3.4.o.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-bind:1.2.6.classpath"/>
-    <path refid="library.maven:_bcel:bcel:5.1.classpath"/>
-    <path refid="library.maven:_regexp:regexp:1.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-bind:1.3.1.classpath"/>
+    <path refid="library.maven:_org.apache.bcel:bcel:6.0.classpath"/>
     <path refid="library.maven:_log4j:log4j:1.2.17.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.8.4.classpath"/>
     <path refid="library.maven:_com.thoughtworks.qdox:qdox:1.12.1.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-extras:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-extras:1.3.1.classpath"/>
     <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
     <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
     <path refid="library.maven:_org.jdom:jdom:1.1.3.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-schema:1.2.6.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-tools:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-schema:1.3.1.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-tools:1.3.1.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.contenttype:3.4.100.v20110423-0524.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.jobs:3.5.100.v20110404.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.resources:3.7.100.v20110510-0712.classpath"/>
@@ -275,8 +318,9 @@
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.text:3.5.100.v20110505-0800.classpath"/>
   </path>
   
-  <path id="neetydemo.module.classpath">
-    <pathelement location="${neetydemo.output.dir}"/>
+  <path id="nettydemo.module.classpath">
+    <path refid="${module.jdk.classpath.nettydemo}"/>
+    <pathelement location="${nettydemo.output.dir}"/>
     <path refid="library.maven:_io.netty:netty-all:5.0.0.alpha1.classpath"/>
     <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
     <path refid="library.maven:_org.msgpack:msgpack:0.6.7.classpath"/>
@@ -285,20 +329,21 @@
     <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
     <path refid="library.maven:_org.javassist:javassist:3.16.1-ga.classpath"/>
     <path refid="library.maven:_com.google.protobuf:protobuf-java:2.5.0.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-run:1.2.6.classpath"/>
-    <path refid="library.maven:_joda-time:joda-time:2.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-run:1.3.1.classpath"/>
+    <path refid="library.maven:_joda-time:joda-time:2.9.5.classpath"/>
     <path refid="library.maven:_xpp3:xpp3:1.1.3.4.o.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-bind:1.2.6.classpath"/>
-    <path refid="library.maven:_bcel:bcel:5.1.classpath"/>
-    <path refid="library.maven:_regexp:regexp:1.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-bind:1.3.1.classpath"/>
+    <path refid="library.maven:_org.apache.bcel:bcel:6.0.classpath"/>
     <path refid="library.maven:_log4j:log4j:1.2.17.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.8.4.classpath"/>
     <path refid="library.maven:_com.thoughtworks.qdox:qdox:1.12.1.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-extras:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-extras:1.3.1.classpath"/>
     <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
     <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
     <path refid="library.maven:_org.jdom:jdom:1.1.3.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-schema:1.2.6.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-tools:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-schema:1.3.1.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-tools:1.3.1.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.contenttype:3.4.100.v20110423-0524.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.jobs:3.5.100.v20110404.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.resources:3.7.100.v20110510-0712.classpath"/>
@@ -310,9 +355,9 @@
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.text:3.5.100.v20110505-0800.classpath"/>
   </path>
   
-  <path id="neetydemo.runtime.module.classpath">
-    <pathelement location="${neetydemo.testoutput.dir}"/>
-    <pathelement location="${neetydemo.output.dir}"/>
+  <path id="nettydemo.runtime.module.classpath">
+    <pathelement location="${nettydemo.testoutput.dir}"/>
+    <pathelement location="${nettydemo.output.dir}"/>
     <path refid="library.maven:_io.netty:netty-all:5.0.0.alpha1.classpath"/>
     <path refid="library.maven:_commons-collections:commons-collections:3.2.1.classpath"/>
     <path refid="library.maven:_org.msgpack:msgpack:0.6.7.classpath"/>
@@ -321,20 +366,21 @@
     <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
     <path refid="library.maven:_org.javassist:javassist:3.16.1-ga.classpath"/>
     <path refid="library.maven:_com.google.protobuf:protobuf-java:2.5.0.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-run:1.2.6.classpath"/>
-    <path refid="library.maven:_joda-time:joda-time:2.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-run:1.3.1.classpath"/>
+    <path refid="library.maven:_joda-time:joda-time:2.9.5.classpath"/>
     <path refid="library.maven:_xpp3:xpp3:1.1.3.4.o.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-bind:1.2.6.classpath"/>
-    <path refid="library.maven:_bcel:bcel:5.1.classpath"/>
-    <path refid="library.maven:_regexp:regexp:1.2.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-bind:1.3.1.classpath"/>
+    <path refid="library.maven:_org.apache.bcel:bcel:6.0.classpath"/>
     <path refid="library.maven:_log4j:log4j:1.2.17.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant:1.8.4.classpath"/>
+    <path refid="library.maven:_org.apache.ant:ant-launcher:1.8.4.classpath"/>
     <path refid="library.maven:_com.thoughtworks.qdox:qdox:1.12.1.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-extras:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-extras:1.3.1.classpath"/>
     <path refid="library.maven:_dom4j:dom4j:1.6.1.classpath"/>
     <path refid="library.maven:_xml-apis:xml-apis:1.0.b2.classpath"/>
     <path refid="library.maven:_org.jdom:jdom:1.1.3.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-schema:1.2.6.classpath"/>
-    <path refid="library.maven:_org.jibx:jibx-tools:1.2.6.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-schema:1.3.1.classpath"/>
+    <path refid="library.maven:_org.jibx:jibx-tools:1.3.1.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.contenttype:3.4.100.v20110423-0524.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.jobs:3.5.100.v20110404.classpath"/>
     <path refid="library.maven:_org.jibx.config.3rdparty.org.eclipse:org.eclipse.core.resources:3.7.100.v20110510-0712.classpath"/>
@@ -347,64 +393,93 @@
   </path>
   
   
-  <patternset id="excluded.from.module.neetydemo">
+  <patternset id="excluded.from.module.nettydemo">
     <patternset refid="ignored.files"/>
   </patternset>
   
-  <patternset id="excluded.from.compilation.neetydemo">
-    <patternset refid="excluded.from.module.neetydemo"/>
+  <patternset id="excluded.from.compilation.nettydemo">
+    <patternset refid="excluded.from.module.nettydemo"/>
   </patternset>
   
-  <path id="neetydemo.module.sourcepath">
-    <dirset dir="${module.neetydemo.basedir}">
+  <path id="nettydemo.module.sourcepath">
+    <dirset dir="${module.nettydemo.basedir}">
       <include name="src/main/java"/>
+      <include name="src/main/resources"/>
+    </dirset>
+  </path>
+  
+  <path id="nettydemo.module.test.sourcepath">
+    <dirset dir="${module.nettydemo.basedir}">
+      <include name="src/test/java"/>
     </dirset>
   </path>
   
   
-  <target name="compile.module.neetydemo" depends="compile.module.neetydemo.production,compile.module.neetydemo.tests" description="Compile module neetydemo"/>
-
-  <target name="bindgen">
-    <echo message="Running bindgen tool" />
-    <java classpathref="neetydemo.runtime.production.module.classpath" fork="true" failonerror="true" classname="org.jibx.binding.generator.BindGen">
-      <arg value="-s" />
-      <arg value="${basedir}/src/main/java/domain" />
-      <arg value="domain.Order" />
-    </java>
-  </target>
-
-  <target name="compile.module.neetydemo.production" description="Compile module neetydemo; production classes">
-    <mkdir dir="${neetydemo.output.dir}"/>
-    <javac destdir="${neetydemo.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true">
-      <compilerarg line="${compiler.args.neetydemo}"/>
-      <bootclasspath refid="neetydemo.module.bootclasspath"/>
-      <classpath refid="neetydemo.module.production.classpath"/>
-      <src refid="neetydemo.module.sourcepath"/>
-      <patternset refid="excluded.from.compilation.neetydemo"/>
+  <target name="compile.module.nettydemo" depends="compile.module.nettydemo.production,compile.module.nettydemo.tests" description="Compile module NettyDemo"/>
+  
+  <target name="compile.module.nettydemo.production" description="Compile module NettyDemo; production classes">
+    <mkdir dir="${nettydemo.output.dir}"/>
+    <javac destdir="${nettydemo.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.nettydemo}/javac">
+      <compilerarg line="${compiler.args.nettydemo}"/>
+      <bootclasspath refid="nettydemo.module.bootclasspath"/>
+      <classpath refid="nettydemo.module.production.classpath"/>
+      <src refid="nettydemo.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.nettydemo"/>
     </javac>
     
-    <copy todir="${neetydemo.output.dir}">
-      <fileset dir="${module.neetydemo.basedir}/src/main/java">
+    <copy todir="${nettydemo.output.dir}">
+      <fileset dir="${module.nettydemo.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.nettydemo.basedir}/src/main/resources">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
     </copy>
   </target>
   
-  <target name="compile.module.neetydemo.tests" depends="compile.module.neetydemo.production" description="compile module neetydemo; test classes" unless="skip.tests"/>
+  <target name="compile.module.nettydemo.tests" depends="compile.module.nettydemo.production" description="compile module NettyDemo; test classes" unless="skip.tests">
+    <mkdir dir="${nettydemo.testoutput.dir}"/>
+    <javac destdir="${nettydemo.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.nettydemo}/javac">
+      <compilerarg line="${compiler.args.nettydemo}"/>
+      <bootclasspath refid="nettydemo.module.bootclasspath"/>
+      <classpath refid="nettydemo.module.classpath"/>
+      <src refid="nettydemo.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.nettydemo"/>
+    </javac>
+    
+    <copy todir="${nettydemo.testoutput.dir}">
+      <fileset dir="${module.nettydemo.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
   
-  <target name="clean.module.neetydemo" description="cleanup module">
-    <delete dir="${neetydemo.output.dir}"/>
-    <delete dir="${neetydemo.testoutput.dir}"/>
+  <target name="clean.module.nettydemo" description="cleanup module">
+    <delete dir="${nettydemo.output.dir}"/>
+    <delete dir="${nettydemo.testoutput.dir}"/>
   </target>
   
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
   
-  <target name="clean" depends="clean.module.neetydemo" description="cleanup all"/>
+  <target name="clean" depends="clean.module.nettydemo" description="cleanup all"/>
   
-  <target name="build.modules" depends="init, clean, compile.module.neetydemo" description="build all modules"/>
-  
+  <target name="build.modules" depends="init, clean, compile.module.nettydemo" description="build all modules"/>
+
+  <target name="bindgen">
+    <echo message="Running bindgen tool" />
+    <java classpathref="nettydemo.runtime.module.classpath" fork="true"
+          failonerror="true"
+          classname="org.jibx.binding.generator.BindGen">
+      <arg value="-s"/>
+      <arg value="src"/>
+      <arg value="domain.Order"/>
+    </java>
+  </target>
+
   <target name="all" depends="build.modules" description="build all"/>
 </project>
