@@ -1,0 +1,34 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="order">
+    <xs:sequence>
+      <xs:element name="customer" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="xs:string" name="name" minOccurs="0"/>
+          </xs:sequence>
+          <xs:attribute type="xs:long" use="required" name="customerNumber"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="address" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element type="xs:string" name="street" minOccurs="0"/>
+            <xs:element type="xs:string" name="city" minOccurs="0"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="shipping" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="STANDARD_MAIL"/>
+            <xs:enumeration value="PRIORITY_MAIL"/>
+            <xs:enumeration value="INTERNATIONAL_EXPRESS"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:long" use="required" name="number"/>
+    <xs:attribute type="xs:float" name="total"/>
+  </xs:complexType>
+  <xs:element type="order" name="order"/>
+</xs:schema>
